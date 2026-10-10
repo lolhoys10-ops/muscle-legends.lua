@@ -1,17 +1,15 @@
 -- Muscle Legends
--- Auto Train + Speed Controller + Auto Rebirth
+-- Auto Train + Speed Controller
+-- Auto Rebirth + Rebirth Interval Controller
 -- Auto Barbell + Auto Press E
 
 repeat task.wait() until game:IsLoaded()
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local VirtualInputManager =
-    game:GetService("VirtualInputManager")
+local VirtualInputManager = game:GetService("VirtualInputManager")
 
 local player = Players.LocalPlayer
-
--- Координаты цели
 local TARGET = Vector3.new(-2800.58, 174.86, 5473.22)
 
 -- Настройки
@@ -22,7 +20,15 @@ local autoBarbell = false
 local autoPressE = false
 
 local trainInterval = 0.30
-local rebirthInterval = 1
+local rebirthInterval = 3
+
+local trainMinInterval = 0.05
+local trainMaxInterval = 2
+local trainStep = 0.05
+
+local rebirthMinInterval = 2
+local rebirthMaxInterval = 10
+local rebirthStep = 1
 
 -- Удаление старого меню
 local playerGui = player:WaitForChild("PlayerGui")
@@ -38,8 +44,8 @@ gui.ResetOnSpawn = false
 gui.Parent = playerGui
 
 local frame = Instance.new("Frame")
-frame.Size = UDim2.new(0, 280, 0, 370)
-frame.Position = UDim2.new(0, 25, 0.25, 0)
+frame.Size = UDim2.new(0, 280, 0, 440)
+frame.Position = UDim2.new(0, 25, 0.2, 0)
 frame.BackgroundColor3 = Color3.fromRGB(28, 28, 36)
 frame.BorderSizePixel = 0
 frame.Active = true
@@ -98,13 +104,13 @@ local function updateButton(button, name, enabled)
     button.BackgroundColor3 = enabled and ON_COLOR or OFF_COLOR
 end
 
--- Кнопки меню
+-- Переключатели
 local trainButton = makeButton("Auto Train: ON", 42, ON_COLOR)
 local rebirthButton = makeButton("Auto Rebirth: ON", 80, ON_COLOR)
 local barbellButton = makeButton("Auto Barbell: OFF", 118, OFF_COLOR)
 local eButton = makeButton("Auto Press E: OFF", 156, OFF_COLOR)
 
--- Регулятор скорости
+-- Интервал тренировки
 local speedLabel = Instance.new("TextLabel")
 speedLabel.Size = UDim2.new(1, -24, 0, 24)
 speedLabel.Position = UDim2.new(0, 12, 0, 194)
@@ -115,19 +121,15 @@ speedLabel.TextSize = 12
 speedLabel.Parent = frame
 
 local slowerButton = makeButton(
-    "- Медленнее", 224, Color3.fromRGB(70, 90, 140)
+    "- Медленнее", 220, Color3.fromRGB(70, 90, 140)
 )
 slowerButton.Size = UDim2.new(0, 122, 0, 30)
 
 local fasterButton = makeButton(
-    "+ Быстрее", 224, Color3.fromRGB(70, 90, 140)
+    "+ Быстрее", 220, Color3.fromRGB(70, 90, 140)
 )
 fasterButton.Size = UDim2.new(0, 122, 0, 30)
-fasterButton.Position = UDim2.new(0, 146, 0, 224)
-
-local closeButton = makeButton(
-    "CLOSE", 263, Color3.fromRGB(165, 55, 55)
-)
+fasterButton.Position = UDim2.new(0, 146, 0, 220)
 
 local function updateSpeedLabel()
     speedLabel.Text = string.format(
@@ -138,16 +140,64 @@ end
 updateSpeedLabel()
 
 slowerButton.MouseButton1Click:Connect(function()
-    trainInterval = math.min(2, trainInterval + 0.05)
+    trainInterval = math.min(trainMaxInterval, trainInterval + trainStep)
     updateSpeedLabel()
 end)
 
 fasterButton.MouseButton1Click:Connect(function()
-    trainInterval = math.max(0.05, trainInterval - 0.05)
+    trainInterval = math.max(trainMinInterval, trainInterval - trainStep)
     updateSpeedLabel()
 end)
 
--- Переключатели
+-- Интервал Rebirth
+local rebirthLabel = Instance.new("TextLabel")
+rebirthLabel.Size = UDim2.new(1, -24, 0, 24)
+rebirthLabel.Position = UDim2.new(0, 12, 0, 256)
+rebirthLabel.BackgroundTransparency = 1
+rebirthLabel.TextColor3 = Color3.new(1, 1, 1)
+rebirthLabel.Font = Enum.Font.GothamBold
+rebirthLabel.TextSize = 12
+rebirthLabel.Parent = frame
+
+local slowerRebirthButton = makeButton(
+    "- Медленнее", 284, Color3.fromRGB(110, 80, 140)
+)
+slowerRebirthButton.Size = UDim2.new(0, 122, 0, 30)
+
+local fasterRebirthButton = makeButton(
+    "+ Быстрее", 284, Color3.fromRGB(110, 80, 140)
+)
+fasterRebirthButton.Size = UDim2.new(0, 122, 0, 30)
+fasterRebirthButton.Position = UDim2.new(0, 146, 0, 284)
+
+local function updateRebirthLabel()
+    rebirthLabel.Text = string.format(
+        "Интервал Rebirth: %.0f сек", rebirthInterval
+    )
+end
+
+updateRebirthLabel()
+
+slowerRebirthButton.MouseButton1Click:Connect(function()
+    rebirthInterval = math.min(
+        rebirthMaxInterval, rebirthInterval + rebirthStep
+    )
+    updateRebirthLabel()
+end)
+
+fasterRebirthButton.MouseButton1Click:Connect(function()
+    rebirthInterval = math.max(
+        rebirthMinInterval, rebirthInterval - rebirthStep
+    )
+    updateRebirthLabel()
+end)
+
+-- Закрытие
+local closeButton = makeButton(
+    "CLOSE", 326, Color3.fromRGB(165, 55, 55)
+)
+
+-- Переключатели функций
 trainButton.MouseButton1Click:Connect(function()
     autoTrain = not autoTrain
     updateButton(trainButton, "Auto Train", autoTrain)
@@ -161,12 +211,7 @@ end)
 barbellButton.MouseButton1Click:Connect(function()
     autoBarbell = not autoBarbell
     updateButton(barbellButton, "Auto Barbell", autoBarbell)
-
-    if autoBarbell then
-        status.Text = "Телепорт к цели..."
-    else
-        status.Text = "Auto Barbell выключен"
-    end
+    status.Text = autoBarbell and "Телепорт к цели..." or "Auto Barbell выключен"
 end)
 
 eButton.MouseButton1Click:Connect(function()
@@ -177,7 +222,9 @@ end)
 -- Телепорт
 local function teleportToTarget()
     local character = player.Character
-    if not character then return false end
+    if not character then
+        return false
+    end
 
     local root = character:FindFirstChild("HumanoidRootPart")
     local humanoid = character:FindFirstChildOfClass("Humanoid")
@@ -208,23 +255,25 @@ task.spawn(function()
     end
 end)
 
--- Auto Rebirth
+-- Auto Rebirth: один запрос за раз
 task.spawn(function()
     while running do
         task.wait(rebirthInterval)
         if not running then break end
 
         if autoRebirth then
-            pcall(function()
-                local events =
-                    ReplicatedStorage:FindFirstChild("rEvents")
-                local remote = events
-                    and events:FindFirstChild("rebirthRemote")
+            local events = ReplicatedStorage:FindFirstChild("rEvents")
+            local remote = events and events:FindFirstChild("rebirthRemote")
 
-                if remote and remote:IsA("RemoteFunction") then
+            if remote and remote:IsA("RemoteFunction") then
+                local ok, err = pcall(function()
                     remote:InvokeServer("rebirthRequest")
+                end)
+
+                if not ok then
+                    warn("[Auto Rebirth] Ошибка:", err)
                 end
-            end)
+            end
         end
     end
 end)
@@ -251,24 +300,20 @@ end)
 -- Телепорт после возрождения
 local function onCharacterAdded(character)
     task.spawn(function()
-        local root = character:WaitForChild(
-            "HumanoidRootPart", 10
-        )
+        local root = character:WaitForChild("HumanoidRootPart", 10)
         if not root then return end
 
         task.wait(1.5)
 
-        if running and autoBarbell then
-            if teleportToTarget() then
-                status.Text = "Телепорт выполнен"
-            end
+        if running and autoBarbell and teleportToTarget() then
+            status.Text = "Телепорт выполнен"
         end
     end)
 end
 
 player.CharacterAdded:Connect(onCharacterAdded)
 
--- Закрытие
+-- Закрытие меню
 closeButton.MouseButton1Click:Connect(function()
     running = false
     autoTrain = false
