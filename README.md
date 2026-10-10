@@ -34,30 +34,35 @@ The script includes a configurable target position and training interval.
 
 This is an unofficial community script and is not affiliated with or endorsed by Roblox or the developers of Muscle Legends. Use it responsibly and at your own risk.
 
-## 📢 Об этом обновлении
+## 📢 About This Update
 
-В этой версии скрипта **Muscle Legends** добавлена система регулировки интервала Auto Rebirth и улучшено управление автоматическими функциями.
+This version of **Muscle Legends Script** introduces a configurable Auto Rebirth interval and improved control over automated features.
 
-### ✨ Что нового
+### ✨ What's New
 
-- ⏱️ **Rebirth Interval Controller** — регулировка интервала перерождения от 2 до 10 секунд с шагом 1 секунда.
-- 🎨 **Обновлённое меню** — переключатели функций и удобные регуляторы интервалов.
-- 🛠️ **Обработка ошибок** — добавлена обработка ошибок при выполнении запроса Rebirth.
+- ⏱️ **Rebirth Interval Controller** — adjust the rebirth interval from 2 to 10 seconds in 1-second increments.
+- 🎨 **Updated GUI** — convenient toggles and interval controls.
+- 🛠️ **Error Handling** — added error handling for Rebirth requests.
 
-### ⏱️ Настройки Auto Rebirth
+### ⏱️ Auto Rebirth Settings
 
-- Начальный интервал: **3 секунды**
-- Минимальный интервал: **2 секунды**
-- Максимальный интервал: **10 секунд**
-- Шаг изменения: **1 секунда**
+- Initial interval: **3 seconds**
+- Minimum interval: **2 seconds**
+- Maximum interval: **10 seconds**
+- Adjustment step: **1 second**
 
-Кнопка **«+ Быстрее»** уменьшает интервал, а **«− Медленнее»** увеличивает его.
+The **"+ Faster"** button decreases the interval, while the **"- Slower"** button increases it.
 
-### 📝 Примечания
+### 📝 Notes
 
-- Некоторые функции зависят от текущей версии игры.
-- Слишком частые запросы могут ограничиваться самой игрой.
-- Если возникают ошибки, проверьте совместимость используемого инструмента запуска.
+- Some features may depend on the current game version.
+- The game may limit requests sent too frequently.
+- If errors occur, check compatibility with your execution environment.
+
+---
+
+**Version:** Updated Auto Rebirth System  
+**Project:** Muscle Legends Script
 
 ---
 
