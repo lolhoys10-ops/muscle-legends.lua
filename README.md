@@ -1,34 +1,47 @@
-# 💪 Muscle Legends Script
+# 💪 Muscle Legends Script for Roblox
 
-A customizable **Muscle Legends script for Roblox**, designed to make training and rebirth management easier with a simple, draggable GUI.
+A customizable script for **Muscle Legends** on Roblox, featuring a graphical user interface for managing automatic training, rebirths, and other in-game functions.
 
 ## ✨ Features
 
 - 🏋️ **Auto Train** — automatically trains your character.
-- ⚡ **Train Speed Controller** — adjust the training interval from 0.05 to 2 seconds.
+- ⚡ **Training Interval Control** — adjust the interval between training actions.
 - 🔄 **Auto Rebirth** — automatically sends rebirth requests.
-- 📍 **Auto Barbell** — teleports your character to a configurable target position and attempts to return after respawning.
-- ⌨️ **Auto Press E** — repeatedly attempts to simulate the E key.
-- 🖥️ **Custom GUI** — draggable menu with individual feature toggles.
-- ❌ **Close Button** — closes the menu and stops the script's loops.
+- ⏱️ **Rebirth Interval Control** — customize how frequently Auto Rebirth sends requests.
+- 📍 **Auto Barbell** — teleports your character to a predefined barbell location and attempts to do so again after respawning.
+- ⌨️ **Auto E** — repeatedly simulates pressing the `E` key.
+- 🖥️ **Custom GUI** — a draggable interface with feature toggles and interval controls.
+- ❌ **Close Button** — closes the interface and stops the script's running loops.
 
-## 🚀 How to Use
+## ⚙️ Settings
 
-1. Open the script using a compatible Lua executor.
-2. Enable or disable features using the GUI.
-3. Adjust the training interval to your preference.
-4. Enable Auto Barbell to use the configured target position.
-5. Enable Auto Press E to attempt repeated E-key input.
+### 🏋️ Auto Train
 
-## ⚙️ Configuration
+- Default interval: `0.30` seconds
+- Minimum interval: `0.05` seconds
+- Maximum interval: `2.00` seconds
+- Adjustment step: `0.05` seconds
 
-The script includes a configurable target position and training interval.
+### 🔄 Auto Rebirth
 
-- Default training interval: `0.30` seconds
-- Minimum training interval: `0.05` seconds
-- Maximum training interval: `2.00` seconds
+- Default interval: `3` seconds
+- Minimum interval: `2` seconds
+- Maximum interval: `10` seconds
+- Adjustment step: `1` second
 
-**Note:** Executor compatibility may vary. Teleportation, remote calls, and simulated key input depend on the game and executor environment. Very short intervals may increase performance load.
+A shorter interval sends requests more frequently, while a longer interval reduces their frequency. The actual rebirth rate depends on the game's mechanics and limitations.
+
+### 📍 Auto Barbell
+
+This feature teleports your character to a predefined position. You can change the target coordinates directly in the script.
+
+## 📝 Important Notes
+
+- Compatibility depends on the current version of Muscle Legends and the execution environment.
+- Some features may stop working after game updates.
+- Sending requests too frequently may trigger game limitations or cause instability.
+- Teleportation and simulated keyboard input depend on the capabilities of the execution environment.
+- Use the script at your own discretion and follow Roblox's and the game's rules.
 
 ## ⚠️ Disclaimer
 
